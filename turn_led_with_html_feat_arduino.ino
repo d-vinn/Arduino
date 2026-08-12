@@ -1,0 +1,55 @@
+// 아두이노 보드와 ESP01 모듈 간의 통신이 가능하도록 회로 구현해야 함!!
+#include <SoftwareSerial.h>
+#define DEBUG true
+
+SoftwareSerial esp8266(7,8);
+
+void setup() {
+  Serial.begin(9600);
+  esp8266.begin(9600);
+  
+  pinMode(13, OUTPUT);
+  digitalWrite(13, HIGH);
+
+  sendData("AT+RST\r\n",2000,DEBUG);
+  sendData("AT+CIOBAUD?\r\n",2000,DEBUG);
+  sendData("AT+CWMODE=3\r\n",1000,DEBUG);
+  sendData("AT+CWLAP\r\n",3000,DEBUG);
+  sendData("AT+CWJAP=\"3F_302\",\"0424719222!!\"\r\n",5000,DEBUG);
+  sendData("AT+CIFSR\r\n",1000,DEBUG);
+  sendData("AT+CIPMUX=1\r\n",1000,DEBUG);
+  sendData("AT+CIPSERVER=1,80\r\n",1000,DEBUG);
+}
+
+void loop() {
+  if (esp8266.available()) {
+    if (esp8266.find("+IPD,")) {
+      delay(1000);
+      int connectionId = esp8266.read() - 48;
+      esp8266.find("pin=");
+      int pinNumber = (esp8266.read() - 48) * 10;
+      pinNumber += (esp8266.read() - 48);
+      digitalWrite(pinNumber, !digitalRead(pinNumber));
+      String closeCommand = "AT+CIPCLOSE=";
+      closeCommand += connectionId;
+      closeCommand += "\r\n";
+      sendData(closeCommand,1000,DEBUG);
+    }
+  }
+}
+
+String sendData(String command, const int timeout, boolean debug) {
+  String response = "";
+  esp8266.print(command);
+  long int time = millis();
+  while ((time + timeout) > millis()) {
+    while (esp8266.available()) {
+      char c = esp8266.read();
+      response += c;
+    }
+  }
+  if (debug) {
+    Serial.print(response);
+  }
+  return response;
+}
