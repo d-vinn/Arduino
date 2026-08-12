@@ -2,7 +2,7 @@
 <H1>ESP-01 모듈</H1>
 ESP-8266 모듈 : Wi-Fi 무선 통신 기능을 탑재한 저전력 마이크로컨트롤러
 ESP-01 모듈 : ESP-8266을 장착한 모듈, 8핀 소형 폼팩터, 보통 ESP-01 어댑터나 USB to TTL 변환 모듈을 통해 연결, 아두이노 IDE 등을 사용해 프로그램을 업로드하여 사용  
-
+<br>
 <H1>ESP-01 모듈과 컨버터 연결</H1>
 <img width="1501" height="808" alt="image" src="https://github.com/user-attachments/assets/4d52ff32-43fd-475d-958a-3074fe5619b3" />  
 사진의 좌측은 ESP-01 모듈, 우측은 USB to TTL 컨버터  
